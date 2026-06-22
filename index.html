@@ -4,38 +4,24 @@
   <title>Spending Tracker</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
   <style>
     body {
-      font-family: Arial, sans-serif;
-      max-width: 900px;
-      margin: 30px auto;
-      padding: 20px;
       background: #f5f5f5;
     }
 
+    .tracker-container {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
     .card {
-      background: white;
-      padding: 24px;
+      border: none;
       border-radius: 10px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.12);
       margin-bottom: 24px;
-    }
-
-    input, select, textarea, button {
-      width: 100%;
-      padding: 12px;
-      margin-top: 12px;
-      box-sizing: border-box;
-      font-size: 16px;
-    }
-
-    button {
-      cursor: pointer;
-      font-weight: bold;
-      background: #2563eb;
-      color: white;
-      border: none;
-      border-radius: 6px;
     }
 
     #status {
@@ -43,204 +29,608 @@
       margin-top: 12px;
     }
 
-    .table-wrap {
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 15px;
-    }
-
-    th {
-      background: #2563eb;
-      color: white;
-      padding: 10px;
-      text-align: left;
-    }
-
-    td {
-      padding: 10px;
-      border-bottom: 1px solid #ddd;
-    }
-
     .amount {
       font-weight: bold;
       text-align: right;
     }
 
-    #loadMoreBtn {
-      margin-top: 16px;
-      background: #111827;
+.table {
+  font-size: 11px;
+}
+
+.table td,
+.table th {
+  white-space: nowrap;
+  padding: 6px;
+}
+    tr.transaction-row {
+      cursor: pointer;
     }
   </style>
 </head>
 
 <body>
-
-  <div class="card">
-    <h2>💰 Spending Tracker</h2>
-
-    <form id="expenseForm">
-      <input type="date" id="date" required>
-
-      <select id="type" required>
-        <option value="Expense">Expense</option>
-        <option value="Income">Income</option>
-        <option value="Transfer">Transfer</option>
-      </select>
-
-      <select id="category" required>
-        <option value="">Select Category</option>
-        <option value="Income">Income</option>
-        <option value="Commitments">Commitments</option>
-        <option value="Family">Family</option>
-        <option value="Utilities">Utilities</option>
-        <option value="Lifestyle">Lifestyle</option>
-        <option value="Subscription">Subscription</option>
-        <option value="Investment">Investment</option>
-      </select>
-
-      <input type="text" id="subCategory" placeholder="Sub-Category" required>
-
-      <input type="number" id="amount" placeholder="Amount (RM)" step="0.01" required>
-
-      <textarea id="notes" placeholder="Notes"></textarea>
-
-      <button type="submit">Save Transaction</button>
-    </form>
-
-    <p id="status"></p>
+<nav class="navbar bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/budget/">
+      <img src="https://raw.githubusercontent.com/fakhrulzakry/budget/refs/heads/main/icon_budget.png" alt="Logo" width="auto" height="24" class="d-inline-block align-text-top">
+      FZ Spending Tracker
+    </a>
   </div>
+</nav>
+
+<div class="tracker-container">
 
   <div class="card">
-    <h3>📋 Recent Transactions</h3>
+    <div class="card-body p-4">
+      <h5 class="mb-4">💰 Spending Tracker</h5>
 
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Type</th>
-            <th>Category</th>
-            <th>Sub Category</th>
-            <th>Amount</th>
-            <th>Notes</th>
-          </tr>
-        </thead>
+      <form id="expenseForm">
+        <input type="date" id="date" class="form-control mb-3" required>
 
-        <tbody id="recentTable">
-          <tr>
-            <td colspan="6">Loading...</td>
-          </tr>
-        </tbody>
-      </table>
+        <select id="type" class="form-select mb-3" required>
+          <option value="">Select Type</option>
+<option value="Income">Income</option>
+<option value="Expense">Expense</option>
+<option value="Transfer">Transfer</option>
+<option value="Deduction">Deduction</option>
+        </select>
+
+        <select id="category" class="form-select mb-3" required>
+<option value="">Select Category</option>
+
+<option value="Income">Income</option>
+
+<option value="Commitments">Commitments</option>
+<option value="Family">Family</option>
+<option value="Food & Beverage">Food & Beverage</option>
+<option value="Transportation">Transportation</option>
+<option value="Utilities">Utilities</option>
+
+<option value="Health">Health</option>
+<option value="Lifestyle">Lifestyle</option>
+<option value="Entertainment">Entertainment</option>
+<option value="Shopping">Shopping</option>
+
+<option value="Subscription">Subscription</option>
+
+<option value="Investment">Investment</option>
+<option value="Savings">Savings</option>
+<option value="Debt">Debt</option>
+
+<option value="Receivable">Receivable</option>
+
+<option value="Statutory">Statutory</option>
+
+<option value="Charity">Charity</option>
+
+<option value="Others">Others</option>
+        </select>
+
+        <!-- <input type="text" id="subCategory" class="form-control mb-3" placeholder="Sub-Category" > -->
+
+<input
+  list="subCategoryList"
+  type="text"
+  id="subCategory"
+  class="form-control mb-3"
+  placeholder="Sub-Category"
+  required>
+
+<datalist id="subCategoryList">
+
+  <!-- Income -->
+  <option value="Main Salary">
+
+  <!-- Statutory -->
+  <option value="EPF Employee">
+  <option value="PCB Tax">
+  <option value="SOCSO">
+  <option value="EIS">
+
+  <!-- Commitments -->
+  <option value="House TR2">
+  <option value="Insurance AIA">
+  <option value="Insurance TM">
+  <option value="Credit Card HSBC">
+  <option value="Credit Card CIMB">
+  <option value="Credit Card Maybank">
+  <option value="SPLater">
+
+  <!-- Investment -->
+  <option value="ASB">
+  <option value="Gold">
+
+  <!-- Savings -->
+  <option value="Emergency Fund">
+  <option value="Travel Fund">
+  <option value="Car Fund">
+  <option value="Goals">
+
+  <!-- Utilities -->
+  <option value="Indah Water">
+  <option value="Time Internet">
+  <option value="Telco Umobile">
+  <option value="DBKL Taxes">
+  <option value="TNB">
+
+  <!-- Parking -->
+  <option value="Parking VP">
+  <option value="Parking MidValley">
+
+  <!-- Family -->
+  <option value="Insurance Mama">
+  <option value="Mama Allowance">
+  <option value="Family Others">
+
+  <!-- Receivable -->
+  <option value="Debt">
+
+  <!-- Lifestyle -->
+  <option value="Groceries">
+  <option value="Coffee">
+  <option value="Breakfast">
+  <option value="Lunch">
+  <option value="Dinner">
+  <option value="Eat and Chill">
+
+  <!-- Subscription -->
+  <option value="YouTube">
+  <option value="Spotify">
+  <option value="ChatGPT">
+  <option value="iCloud">
+
+</datalist>
+
+        <input type="number" id="amount" class="form-control mb-3" placeholder="Amount (RM)" step="0.01" required>
+
+        <textarea id="notes" class="form-control mb-3" placeholder="Notes"></textarea>
+
+        <button type="submit" class="btn btn-primary w-100 fw-bold">
+          Save Transaction
+        </button>
+      </form>
+
+      <p id="status"></p>
     </div>
-
-    <button id="loadMoreBtn" type="button">
-      Load More
-    </button>
   </div>
 
-  <script>
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzcelyMSU0DWJjJcvc8vWjixJU7qjX3UXSOrZg-L9nIRNrymhpl7N8KisRQzaZzDZFe7g/exec";
+  <div class="card">
+    <div class="card-body p-4">
+      <h5 class="mb-3">📋 Recent Transactions</h5>
 
-    let currentLimit = 20;
+      <div class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead class="table-primary">
+            <tr>
+              <th>Date</th>
+              <th>Type</th>
+              <th>Category</th>
+              <th>Sub Category</th>
+              <th class="text-end">Amount</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
 
-    document.getElementById("date").valueAsDate = new Date();
+          <tbody id="recentTable">
+            <tr>
+              <td colspan="6">Loading...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-    document.getElementById("expenseForm").addEventListener("submit", async function(e) {
-      e.preventDefault();
+      <button id="loadMoreBtn" type="button" class="btn btn-dark w-100 fw-bold">
+        Load More
+      </button>
+    </div>
+  </div>
 
-      const payload = {
-        date: document.getElementById("date").value,
-        type: document.getElementById("type").value,
-        category: document.getElementById("category").value,
-        subCategory: document.getElementById("subCategory").value,
-        amount: document.getElementById("amount").value,
-        notes: document.getElementById("notes").value
-      };
+</div>
 
-      document.getElementById("status").innerText = "Saving...";
+<!-- Edit Modal -->
+<div class="modal fade" id="editModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
 
-      try {
-        await fetch(WEB_APP_URL, {
-          method: "POST",
-          mode: "no-cors",
-          headers: {
-            "Content-Type": "text/plain;charset=utf-8"
-          },
-          body: JSON.stringify(payload)
-        });
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Transaction</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
 
-        document.getElementById("status").innerText = "✅ Saved successfully.";
-        document.getElementById("expenseForm").reset();
-        document.getElementById("date").valueAsDate = new Date();
+      <div class="modal-body">
 
-        currentLimit = 20;
-        setTimeout(loadRecentInputs, 1500);
+        <input type="hidden" id="editId">
 
-      } catch (error) {
-        document.getElementById("status").innerText = "❌ Error saving entry.";
-      }
-    });
+        <label class="form-label">Date</label>
+        <input type="date" id="editDate" class="form-control mb-3">
 
-    document.getElementById("loadMoreBtn").addEventListener("click", function() {
-      currentLimit += 20;
-      loadRecentInputs();
-    });
+        <label class="form-label">Type</label>
+        <select id="editType" class="form-select mb-3">
 
-    async function loadRecentInputs() {
-      const table = document.getElementById("recentTable");
+      <option value="">Select Type</option>
+<option value="Income">Income</option>
+<option value="Expense">Expense</option>
+<option value="Transfer">Transfer</option>
+<option value="Deduction">Deduction</option>
 
-      try {
-        const response = await fetch(
-          WEB_APP_URL +
-          "?limit=" +
-          currentLimit +
-          "&t=" +
-          Date.now()
-        );
 
-        const data = await response.json();
+        </select>
 
-        table.innerHTML = "";
+        <label class="form-label">Category</label>
+        <select id="editCategory" class="form-select mb-3">
 
-        if (!Array.isArray(data) || data.length === 0) {
-          table.innerHTML = "<tr><td colspan='6'>No recent transactions found.</td></tr>";
-          return;
-        }
+<option value="">Select Category</option>
 
-        data.forEach(row => {
-          const tr = document.createElement("tr");
+<option value="Income">Income</option>
 
-          tr.innerHTML = `
-            <td>${row.date || ""}</td>
-            <td>${row.type || ""}</td>
-            <td>${row.category || ""}</td>
-            <td>${row.subCategory || ""}</td>
-            <td class="amount">RM ${row.amount || ""}</td>
-            <td>${row.notes || ""}</td>
-          `;
+<option value="Commitments">Commitments</option>
+<option value="Family">Family</option>
+<option value="Food & Beverage">Food & Beverage</option>
+<option value="Transportation">Transportation</option>
+<option value="Utilities">Utilities</option>
 
-          table.appendChild(tr);
-        });
+<option value="Health">Health</option>
+<option value="Lifestyle">Lifestyle</option>
+<option value="Entertainment">Entertainment</option>
+<option value="Shopping">Shopping</option>
 
-        if (data.length < currentLimit) {
-          document.getElementById("loadMoreBtn").style.display = "none";
-        } else {
-          document.getElementById("loadMoreBtn").style.display = "block";
-        }
+<option value="Subscription">Subscription</option>
 
-      } catch (error) {
-        table.innerHTML = "<tr><td colspan='6'>Unable to load recent transactions.</td></tr>";
-      }
+<option value="Investment">Investment</option>
+<option value="Savings">Savings</option>
+<option value="Debt">Debt</option>
+
+<option value="Receivable">Receivable</option>
+
+<option value="Statutory">Statutory</option>
+
+<option value="Charity">Charity</option>
+
+<option value="Others">Others</option>
+
+
+
+        </select>
+
+        <label class="form-label">Sub Category</label>
+        
+
+<input
+  list="subCategoryList"
+  type="text"
+  id="editSubCategory"
+  class="form-control mb-3"
+  placeholder="Sub-Category"
+  required>
+
+<datalist id="subCategoryList">
+
+  <!-- Income -->
+  <option value="Main Salary">
+
+  <!-- Statutory -->
+  <option value="EPF Employee">
+  <option value="PCB Tax">
+  <option value="SOCSO">
+  <option value="EIS">
+
+  <!-- Commitments -->
+  <option value="House TR2">
+  <option value="Insurance AIA">
+  <option value="Insurance TM">
+  <option value="Credit Card HSBC">
+  <option value="Credit Card CIMB">
+  <option value="Credit Card Maybank">
+  <option value="SPLater">
+
+  <!-- Investment -->
+  <option value="ASB">
+  <option value="Gold">
+
+  <!-- Savings -->
+  <option value="Emergency Fund">
+  <option value="Travel Fund">
+  <option value="Car Fund">
+  <option value="Goals">
+
+  <!-- Utilities -->
+  <option value="Indah Water">
+  <option value="Time Internet">
+  <option value="Telco Umobile">
+  <option value="DBKL Taxes">
+  <option value="TNB">
+
+  <!-- Parking -->
+  <option value="Parking VP">
+  <option value="Parking MidValley">
+
+  <!-- Family -->
+  <option value="Insurance Mama">
+  <option value="Mama Allowance">
+  <option value="Family Others">
+
+  <!-- Receivable -->
+  <option value="Debt">
+
+  <!-- Lifestyle -->
+  <option value="Groceries">
+  <option value="Coffee">
+  <option value="Breakfast">
+  <option value="Lunch">
+  <option value="Dinner">
+  <option value="Eat and Chill">
+
+  <!-- Subscription -->
+  <option value="YouTube">
+  <option value="Spotify">
+  <option value="ChatGPT">
+  <option value="iCloud">
+
+</datalist>
+
+
+
+        <label class="form-label">Amount</label>
+        <input type="number" id="editAmount" class="form-control mb-3" step="0.01">
+
+        <label class="form-label">Notes</label>
+        <textarea id="editNotes" class="form-control mb-3"></textarea>
+
+        <p id="editStatus" class="fw-bold"></p>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" id="deleteBtn">
+          Delete
+        </button>
+
+        <button type="button" class="btn btn-primary" id="updateBtn">
+          Update
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzcelyMSU0DWJjJcvc8vWjixJU7qjX3UXSOrZg-L9nIRNrymhpl7N8KisRQzaZzDZFe7g/exec";
+
+  let currentLimit = 20;
+  let editModal;
+
+  document.getElementById("date").valueAsDate = new Date();
+
+  document.addEventListener("DOMContentLoaded", function() {
+    editModal = new bootstrap.Modal(document.getElementById("editModal"));
+  });
+
+  document.getElementById("expenseForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const payload = {
+      action: "create",
+      date: document.getElementById("date").value,
+      type: document.getElementById("type").value,
+      category: document.getElementById("category").value,
+      subCategory: document.getElementById("subCategory").value,
+      amount: document.getElementById("amount").value,
+      notes: document.getElementById("notes").value
+    };
+
+    document.getElementById("status").innerText = "Saving...";
+
+    try {
+      await fetch(WEB_APP_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify(payload)
+      });
+
+      document.getElementById("status").innerText = "✅ Saved successfully.";
+      document.getElementById("expenseForm").reset();
+      document.getElementById("date").valueAsDate = new Date();
+
+      currentLimit = 20;
+      setTimeout(loadRecentInputs, 1500);
+
+    } catch (error) {
+      document.getElementById("status").innerText = "❌ Error saving entry.";
     }
+  });
 
+  document.getElementById("loadMoreBtn").addEventListener("click", function() {
+    currentLimit += 20;
     loadRecentInputs();
-    setInterval(loadRecentInputs, 10000);
-  </script>
+  });
+
+  async function loadRecentInputs() {
+    const table = document.getElementById("recentTable");
+
+    try {
+      const response = await fetch(
+        WEB_APP_URL +
+        "?limit=" +
+        currentLimit +
+        "&t=" +
+        Date.now()
+      );
+
+      const data = await response.json();
+
+      table.innerHTML = "";
+
+      if (!Array.isArray(data) || data.length === 0) {
+        table.innerHTML = "<tr><td colspan='6'>No recent transactions found.</td></tr>";
+        return;
+      }
+
+data.forEach(row => {
+  const tr = document.createElement("tr");
+  tr.className = "transaction-row";
+
+  const isMobile = window.innerWidth < 768;
+
+  const displayDate = isMobile
+    ? formatShortDate(row.date)
+    : row.date;
+
+  const displayType = isMobile
+    ? shortType(row.type)
+    : row.type;
+
+  const displayCategory = isMobile
+    ? shortCategory(row.category)
+    : row.category;
+
+  //RM remove small
+    const displayAmount = isMobile
+    ? row.amount
+    : `RM ${row.amount}`;
+
+
+  tr.innerHTML = `
+    <td>${displayDate || ""}</td>
+    <td>${displayType || ""}</td>
+    <td>${displayCategory || ""}</td>
+    <td>${row.subCategory || ""}</td>
+    <td class="amount">${displayAmount || ""}</td>
+    <td>${row.notes || ""}</td>
+  `;
+
+  tr.addEventListener("click", function() {
+    openEditModal(row);
+  });
+
+  table.appendChild(tr);
+});
+
+      document.getElementById("loadMoreBtn").style.display =
+        data.length < currentLimit ? "none" : "block";
+
+    } catch (error) {
+      table.innerHTML = "<tr><td colspan='6'>Unable to load recent transactions.</td></tr>";
+    }
+  }
+
+  function openEditModal(row) {
+    document.getElementById("editId").value = row.id || "";
+    document.getElementById("editDate").value = row.date || "";
+    document.getElementById("editType").value = row.type || "";
+    document.getElementById("editCategory").value = row.category || "";
+    document.getElementById("editSubCategory").value = row.subCategory || "";
+    // document.getElementById("editAmount").value = row.amount || "";
+    document.getElementById("editAmount").value =
+  (row.amount || "").replace(/,/g, "");
+    document.getElementById("editNotes").value = row.notes || "";
+    document.getElementById("editStatus").innerText = "";
+
+    editModal.show();
+  }
+
+  document.getElementById("updateBtn").addEventListener("click", async function() {
+    const payload = {
+      action: "update",
+      id: document.getElementById("editId").value,
+      date: document.getElementById("editDate").value,
+      type: document.getElementById("editType").value,
+      category: document.getElementById("editCategory").value,
+      subCategory: document.getElementById("editSubCategory").value,
+      amount: document.getElementById("editAmount").value,
+      notes: document.getElementById("editNotes").value
+    };
+
+    document.getElementById("editStatus").innerText = "Updating...";
+
+    await fetch(WEB_APP_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    document.getElementById("editStatus").innerText = "✅ Updated.";
+    setTimeout(function() {
+      editModal.hide();
+      loadRecentInputs();
+    }, 800);
+  });
+
+  document.getElementById("deleteBtn").addEventListener("click", async function() {
+    const confirmDelete = confirm("Delete this transaction?");
+
+    if (!confirmDelete) return;
+
+    const payload = {
+      action: "delete",
+      id: document.getElementById("editId").value
+    };
+
+    document.getElementById("editStatus").innerText = "Deleting...";
+
+    await fetch(WEB_APP_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    document.getElementById("editStatus").innerText = "✅ Deleted.";
+    setTimeout(function() {
+      editModal.hide();
+      loadRecentInputs();
+    }, 800);
+  });
+
+//small screen
+
+  function formatShortDate(dateValue) {
+  if (!dateValue) return "";
+
+  return new Date(dateValue).toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short"
+  });
+}
+
+function shortType(type) {
+  return {
+    Expense: "Exp",
+    Income: "Inc",
+    Transfer: "Tfer",
+    Deduction: "Ded"
+  }[type] || type;
+}
+
+function shortCategory(category) {
+  return {
+    "Food & Beverage": "Food",
+    "Transportation": "Transport",
+    "Entertainment": "Fun",
+    "Commitments": "Commit",
+    "Subscription": "Sub",
+    "Investment": "Invest"
+  }[category] || category;
+}
+
+
+  loadRecentInputs();
+  setInterval(loadRecentInputs, 10000);
+
+
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
